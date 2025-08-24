@@ -60,6 +60,7 @@ Connecting to the Server via SSH
 chmod 400 lemp-stack-key-pair.pem
 ssh -i "lemp-stack-key-pair.pem" ubuntu@<Public-IP>
 ```
+![Connecting to instance using SSH](./images/connectingtoinstanceusingssh.png)
 
 2. Installing Nginx
 
@@ -72,10 +73,14 @@ Install nginx
 ```
 sudo apt install nginx -y
 ```
+![Installing Nginx](images/installing%20nginx.png)
+
 Verified installation:
 ```
 sudo systemctl status nginx
 ```
+![status of nginx](./images/statusofnginx.png)
+
 🔍 Testing Locally with curl
 
 We can test if Nginx is serving requests locally from the Ubuntu shell:
@@ -83,6 +88,8 @@ We can test if Nginx is serving requests locally from the Ubuntu shell:
 curl http://localhost:80
 curl http://127.0.0.1:80
 ```
+![local access](./images/localaccess.png)
+
 Both commands do the same thing — the difference is:
 
 localhost uses a DNS name.
@@ -95,12 +102,16 @@ You can also confirm the server’s public IP address with:
 ```
 curl -s http://169.254.169.254/latest/meta-data/public-ipv4
 ```
+![lemp](./images/lemp.png)
+
 🌍 Testing via Browser (from the Internet)
 
 Now open a browser and go to:
 ```
 http://<Public-IP-Address>:80
 ```
+![nginx on browser](./images/nginxonbrowser.png)
+
 👉 Port :80 is optional because browsers use it by default.
 
 If everything is configured correctly, you should see the Nginx Welcome Page:
@@ -121,6 +132,7 @@ Once complete, verify installation by logging in as the root administrative user
 ```
 sudo mysql
 ```
+![connecting to mysql server](./images/connectingtomysqlserver.png)
 
 This command connects as root without a password since we’re using sudo.
 
@@ -130,12 +142,15 @@ MySQL ships with a helper script to remove insecure defaults and harden access:
 ```
 sudo mysql_secure_installation
 ```
+![password validation](./images/passwordvalidation.png)
+
 This script guides you through several important steps:
 
 Set a password for the MySQL root account → We used:
 ```
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PassWord.1';
 ```
+![mysql password](./images/mysqlpassword.png)
 
 Configure Password Validation Plugin → We chose MEDIUM strength (at least 8 characters, includes upper/lowercase, numbers, special chars).
 
@@ -157,12 +172,15 @@ To test authentication after hardening, log in with the new password:
 ```
 sudo mysql -p
 ```
+![login to mysql](./images/logintomysql.png)
+
 This time, MySQL prompts for a password before granting access — confirming that root login is secure.
 
 Exit the console when done:
 ```
 exit;
 ```
+
 4. Installing PHP
 
 Now that Nginx is serving web pages and MySQL is securely managing data, the final piece of the LEMP stack is PHP, which will process server-side logic and generate dynamic web content.
@@ -175,6 +193,7 @@ Run the following command to install PHP packages:
 ```
 sudo apt install php-fpm php-mysql -y
 ```
+![installing php](./images/installingphp.png)
 
 php-fpm (FastCGI Process Manager) → Handles PHP requests separately from Nginx for improved performance.
 
@@ -391,6 +410,8 @@ Loaded extensions (e.g., php-mysql)
 
 Server environment variables
 
+![php](./images/php.png)
+
 This confirms that Nginx is successfully processing PHP files via PHP-FPM.
 
 🔹 Step 3: Clean Up (Security Best Practice)
@@ -502,6 +523,8 @@ item_id	content
 3	My third important item
 4	And one more thing
 ```
+![table](./images/table.png)
+
 Exit MySQL:
 ```
 exit
@@ -534,7 +557,6 @@ try {
 }
 ?>
 ```
-
 Save and exit.
 
 🔹 Step 5: Test in Browser
@@ -548,6 +570,8 @@ or
 ```
 http://<Public-DNS>/todo_list.php
 ```
+![todo list](./images/todolist.png)
+
 
 ✅ You should see a clean list of the items inserted into the todo_list table, dynamically retrieved from MySQL.
 
