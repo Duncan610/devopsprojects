@@ -1,5 +1,6 @@
 # MERN To-Do Application
 
+# MERN Web Stack - 101
 A simple **To-Do Application** built with the **MERN stack** (MongoDB, Express.js, React.js, Node.js) and deployed on **AWS EC2**.  
 This project demonstrates **full-stack web development** combined with **cloud deployment** skills.  
 
@@ -25,6 +26,8 @@ This project demonstrates **full-stack web development** combined with **cloud d
 - **GitHub** – Version control
 
 ---
+
+# MERN web Stack - 102
 
 ## Step 1 – Backend Configuration
 
@@ -501,4 +504,547 @@ Your backend is connected to MongoDB Atlas.
 
 You can now test API routes (GET, POST, DELETE) using Postman.
 
+# MERN Web Stack - 106
 
+## Step 1: Testing Backend Code without Frontend (Using Postman)
+
+So far, we have built the **backend** of our To-Do application and connected it to a **MongoDB database**, but we don’t yet have a frontend UI.  
+To test the backend APIs during development, we will use **Postman**, a popular API testing tool.
+
+---
+
+### Step 2: Install Postman
+Download and install **Postman** on your local machine:  
+
+```
+https://www.postman.com/downloads/
+```
+
+---
+
+### Step 3: Test API Endpoints
+
+We created three endpoints in our backend (`/api/todos`) using Express and MongoDB:
+
+1. **Create a New Task** → `POST /api/todos`  
+2. **Get All Tasks** → `GET /api/todos`  
+3. **Delete a Task by ID** → `DELETE /api/todos/:id`
+
+We will now test these APIs with Postman.
+
+---
+
+#### **1. Create a New Task (POST Request)**
+- Open **Postman**
+- Select **POST** request  
+- Enter the URL:  
+
+http://<PublicIP-or-PublicDNS>:5000/api/todos
+
+- Go to **Headers** tab and set:
+
+
+Key: Content-Type
+Value: application/json
+
+- Go to **Body** tab → Select **raw** → Choose **JSON** format  
+- Enter JSON payload:
+- 
+```
+{
+  "action": "Finish project 8 and 9"
+}
+```
+
+Click Send
+
+✅ You should get a response like:
+
+{
+  "_id": "64f1a234abcd56789ef12345",
+  "action": "Finish project 8 and 9",
+  "__v": 0
+}
+
+
+This confirms that the task was successfully created and stored in MongoDB.
+
+2. Get All Tasks (GET Request)
+
+Create a GET request in Postman
+
+Enter the URL:
+
+```
+http://<PublicIP-or-PublicDNS>:5000/api/todos
+```
+
+Click Send
+
+✅ You should see an array of all tasks:
+
+```
+[
+  {
+    "_id": "64f1a234abcd56789ef12345",
+    "action": "Finish project 8 and 9"
+  },
+  {
+    "_id": "64f1b456cdef67890ab12345",
+    "action": "Write project documentation"
+  }
+]
+```
+
+3. Delete a Task (DELETE Request)
+
+Copy the _id of a task from the GET response
+
+Create a DELETE request in Postman
+
+Enter the URL (replace <task_id> with the copied ID):
+
+```
+http://<PublicIP-or-PublicDNS>:5000/api/todos/<task_id>
+```
+
+Click Send
+
+✅ You should see the deleted task as the response:
+
+```
+{
+  "_id": "64f1a234abcd56789ef12345",
+  "action": "Finish MERN project",
+  "__v": 0
+}
+```
+
+Step 4: Verify Server Logs
+
+Check your terminal where Node.js is running — you should see logs confirming the API calls and database actions.
+
+
+# MERN Web Stack - 107
+
+## Step 2: Frontend Creation
+
+Now that our backend API is fully functional, we will build a **frontend (ReactJS)** so that users can interact with our To-Do application via a web browser.
+
+---
+
+### Step 1: Create React App
+
+In the same root directory as your backend (`Todo`), run:
+
+```
+npx create-react-app client
+```
+
+This will create a new folder called client inside your Todo directory.
+
+All React code will live inside this client folder.
+
+Step 2: Install Development Tools
+
+We need a few tools to make development easier:
+
+Concurrently – allows running multiple commands (server + client) in one terminal.
+
+```
+npm install concurrently --save-dev
+```
+
+Nodemon – automatically restarts the server when file changes are detected.
+
+```
+npm install nodemon --save-dev
+```
+
+Step 3: Update package.json Scripts
+
+Open package.json in your Todo root directory and update the scripts section:
+
+```
+"scripts": {
+  "start": "node index.js",
+  "start-watch": "nodemon index.js",
+  "dev": "concurrently \"npm run start-watch\" \"cd client && npm start\""
+}
+```
+
+start → runs the backend with Node.
+
+start-watch → runs the backend with Nodemon (auto-restart).
+
+dev → runs both backend and frontend simultaneously.
+
+Step 4: Configure Proxy in React
+
+We want React to forward API calls to our backend (http://localhost:5000) without needing to type the full path every time.
+
+Change directory to client:
+
+```
+cd client
+```
+
+Open package.json and add this line at the root level (just after "name" or "version"):
+
+```
+"proxy": "http://localhost:5000"
+```
+
+Step 5: Run the Application
+
+Go back to the root Todo directory and run:
+
+```
+npm run dev
+```
+
+This will start both:
+
+The backend server on port 5000
+
+The React frontend on port 3000
+
+Open your browser and visit:
+```
+
+http://localhost:3000
+```
+
+You should see the default React app running.
+
+Step 6: Enable Access from the Internet
+
+If you are running this project on an AWS EC2 instance, you must open TCP port 3000 in the Security Group settings.
+
+Go to your EC2 instance → Security → Inbound Rules → Add Rule:
+
+```
+Type: Custom TCP Rule
+Port Range: 3000
+Source: 0.0.0.0/0   (for testing only; restrict later for security)
+```
+
+
+# MERN Web Stack - 108
+
+## Step 3: Creating React Components
+
+One of the biggest advantages of **React** is that it is **component-based**. Components make code reusable, modular, and easier to maintain.  
+
+For our To-Do app, we will create **three components**:
+- **Input.js** → For adding new tasks  
+- **ListTodo.js** → For displaying tasks  
+- **Todo.js** → Main container that manages state  
+
+---
+
+### Step 1: Setup Components Folder
+
+Navigate to the `src` folder inside your React app and create a `components` directory:
+
+```
+cd client/src
+mkdir components
+cd components
+```
+
+Create the three component files:
+
+```
+touch Input.js ListTodo.js Todo.js
+```
+
+Step 2: Input Component
+
+Open Input.js and add the following code:
+
+```
+import React, { Component } from 'react';
+import axios from 'axios';
+
+class Input extends Component {
+  state = { action: "" }
+
+  addTodo = () => {
+    const task = { action: this.state.action }
+    if (task.action && task.action.length > 0) {
+      axios.post('/api/todos', task)
+        .then(res => {
+          if (res.data) {
+            this.props.getTodos();
+            this.setState({ action: "" })
+          }
+        })
+        .catch(err => console.log(err))
+    } else {
+      console.log('input field required')
+    }
+  }
+
+  handleChange = (e) => {
+    this.setState({ action: e.target.value })
+  }
+
+  render() {
+    let { action } = this.state;
+    return (
+      <div>
+        <input type="text" onChange={this.handleChange} value={action} />
+        <button onClick={this.addTodo}>add todo</button>
+      </div>
+    )
+  }
+}
+
+export default Input;
+```
+
+Step 3: Install Axios
+
+Axios is a promise-based HTTP client we will use for API calls.
+
+From the client folder, install Axios:
+
+```
+cd ../..
+npm install axios
+cd src/components
+```
+
+Step 4: ListTodo Component
+
+Open ListTodo.js and add:
+
+```
+import React from 'react';
+
+const ListTodo = ({ todos, deleteTodo }) => {
+  return (
+    <ul>
+      {todos && todos.length > 0 ? (
+        todos.map(todo => {
+          return (
+            <li key={todo._id} onClick={() => deleteTodo(todo._id)}>
+              {todo.action}
+            </li>
+          )
+        })
+      ) : (
+        <li>No todo(s) left</li>
+      )}
+    </ul>
+  )
+}
+
+export default ListTodo;
+
+Step 5: Todo Component
+
+Open Todo.js and add:
+
+import React, { Component } from 'react';
+import axios from 'axios';
+import Input from './Input';
+import ListTodo from './ListTodo';
+
+class Todo extends Component {
+  state = { todos: [] }
+
+  componentDidMount() {
+    this.getTodos();
+  }
+
+  getTodos = () => {
+    axios.get('/api/todos')
+      .then(res => {
+        if (res.data) {
+          this.setState({ todos: res.data })
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  deleteTodo = (id) => {
+    axios.delete(`/api/todos/${id}`)
+      .then(res => {
+        if (res.data) {
+          this.getTodos()
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  render() {
+    let { todos } = this.state;
+    return (
+      <div>
+        <h1>My Todo(s)</h1>
+        <Input getTodos={this.getTodos} />
+        <ListTodo todos={todos} deleteTodo={this.deleteTodo} />
+      </div>
+    )
+  }
+}
+
+export default Todo;
+```
+
+Step 6: Update App.js
+
+Navigate back to src and update App.js:
+
+```
+import React from 'react';
+import Todo from './components/Todo';
+import './App.css';
+
+const App = () => {
+  return (
+    <div className="App">
+      <Todo />
+    </div>
+  );
+}
+
+export default App;
+```
+
+Step 7: Style the App
+Update App.css:
+
+```
+.App {
+  text-align: center;
+  font-size: calc(10px + 2vmin);
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+input {
+  height: 40px;
+  width: 50%;
+  border: none;
+  border-bottom: 2px #101113 solid;
+  background: none;
+  font-size: 1.5rem;
+  color: #787a80;
+}
+
+input:focus {
+  outline: none;
+}
+
+button {
+  width: 25%;
+  height: 45px;
+  border: none;
+  margin-left: 10px;
+  font-size: 25px;
+  background: #101113;
+  border-radius: 5px;
+  color: #787a80;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+}
+
+ul {
+  list-style: none;
+  text-align: left;
+  padding: 15px;
+  background: #171a1f;
+  border-radius: 5px;
+}
+
+li {
+  padding: 15px;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  background: #282c34;
+  border-radius: 5px;
+  overflow-wrap: break-word;
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 300px) {
+  .App {
+    width: 80%;
+  }
+  input {
+    width: 100%
+  }
+  button {
+    width: 100%;
+    margin-top: 15px;
+    margin-left: 0;
+  }
+}
+
+@media only screen and (min-width: 640px) {
+  .App {
+    width: 60%;
+  }
+  input {
+    width: 50%;
+  }
+  button {
+    width: 30%;
+    margin-left: 10px;
+    margin-top: 0;
+  }
+}
+
+Update index.css:
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+  background-color: #282c34;
+  color: #787a80;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+```
+
+Step 8: Run the Application
+
+Go back to the Todo root directory and run:
+
+```
+cd ../..
+```
+
+```
+npm run dev
+```
+
+This will:
+
+Start the backend server on port 5000
+
+Start the React frontend on port 3000
+
+✅ Final Result
+
+Your To-Do App is now fully functional with the following features:
+
+Add a task
+
+Delete a task
+
+View all tasks
+
+Congratulations 🎉 You have successfully built and deployed a MERN stack application!
