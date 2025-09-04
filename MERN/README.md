@@ -32,11 +32,14 @@ This project demonstrates **full-stack web development** combined with **cloud d
 ## Step 1 – Backend Configuration
 
 In this step, we set up the **backend environment** for our MERN To-Do application on an Ubuntu server.
+![SSH to Instance](./screenshots/sshtoinstance.png) 
 
 ---
 
 ### 🔧 Update and Upgrade Ubuntu
 First, update the package lists and upgrade the system:
+
+![Node.js Location](./screenshots/nodejslocation.png) 
 
 ```
 sudo apt update
@@ -48,6 +51,8 @@ curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
+![Node.js Location](./screenshots/nodejslocation.png) 
+
 ⚡ Note: The command above installs both Node.js and NPM.
 
 NPM is a package manager for Node (similar to apt for Ubuntu).
@@ -55,6 +60,7 @@ NPM is a package manager for Node (similar to apt for Ubuntu).
 It is used to install Node modules, packages, and manage dependency conflicts.
 
 Verify installation:
+![Install Verification](./screenshots/installverification.png)
 
 ```
 node -v
@@ -97,15 +103,6 @@ Verify that the package.json file was created:
 ls
 ```
 
-🚀 Install Express.js
-
-Next, install Express.js, which will be used to build the backend server, and create a routes directory:
-
-```
-npm install express
-mkdir routes
-```
-
 # MERN Web Stack - 103
 
 ## Step 1: Install ExpressJS
@@ -113,6 +110,8 @@ mkdir routes
 Express is a framework for Node.js that simplifies backend development. It provides tools to define routes, handle requests, and manage responses.
 
 ### Install Express
+
+![Installing Express](./screenshots/installingexpress.png)  
 
 ```
 npm install express
@@ -133,6 +132,7 @@ dotenv is used to manage environment variables.
 ```
 npm install dotenv
 ```
+![Installing Dotenv](./screenshots/installingdotenv.png)  
 
 Edit the index.js file
 
@@ -182,10 +182,13 @@ If successful, you should see:
 
 Server running on port 5000
 
+![Checking if server works](./screenshots/checkingifserverworks.png)  
 
 Step 3: Allow Port 5000 in Security Group
 
 Update your EC2 Security Group to allow inbound traffic:
+
+![Node index database](./screenshots/nodeindexdatabase.png)  
 
 ```
 Type: Custom TCP Rule
@@ -204,7 +207,6 @@ http://<PublicIP-or-PublicDNS>:5000
 You should see:
 
 Welcome to Express
-
 
 To retrieve your server’s details:
 
@@ -288,6 +290,8 @@ From the root of your `Todo` project:
 ```
 npm install mongoose
 ```
+
+![Installing Mongoose](./screenshots/installingmongoose.png)  
 
 Step 2: Create the Models Directory
 
@@ -497,6 +501,7 @@ If everything is set up correctly, you should see:
 Database connected successfully
 Server running on port 5000
 
+![Node index database](./screenshots/nodeindexdatabase.png)  
 
 ✅ At this point:
 
@@ -566,6 +571,7 @@ Click Send
   "__v": 0
 }
 
+![Postman POST](./screenshots/postmanpost.png)  
 
 This confirms that the task was successfully created and stored in MongoDB.
 
@@ -595,6 +601,7 @@ Click Send
   }
 ]
 ```
+![Postman GET](./screenshots/postmanget.png)  
 
 3. Delete a Task (DELETE Request)
 
@@ -641,6 +648,9 @@ In the same root directory as your backend (`Todo`), run:
 npx create-react-app client
 ```
 
+![Installing React](./screenshots/installingreact.png)  
+
+
 This will create a new folder called client inside your Todo directory.
 
 All React code will live inside this client folder.
@@ -655,11 +665,15 @@ Concurrently – allows running multiple commands (server + client) in one termi
 npm install concurrently --save-dev
 ```
 
+![Installing Concurrently](./screenshots/installingconcurently.png)  
+
 Nodemon – automatically restarts the server when file changes are detected.
 
 ```
 npm install nodemon --save-dev
 ```
+
+![Installing Nodemon](./screenshots/installingnodemon.png)  
 
 Step 3: Update package.json Scripts
 
@@ -710,8 +724,8 @@ The backend server on port 5000
 The React frontend on port 3000
 
 Open your browser and visit:
-```
 
+```
 http://localhost:3000
 ```
 
@@ -729,6 +743,7 @@ Port Range: 3000
 Source: 0.0.0.0/0   (for testing only; restrict later for security)
 ```
 
+![Port 3000](./screenshots/port3000.png)  
 
 # MERN Web Stack - 108
 
@@ -741,6 +756,10 @@ For our To-Do app, we will create **three components**:
 - **ListTodo.js** → For displaying tasks  
 - **Todo.js** → Main container that manages state  
 
+![React App](./screenshots/reactapp.png)  
+
+![Successful React](./screenshots/sucessfulreact.png)  
+
 ---
 
 ### Step 1: Setup Components Folder
@@ -752,12 +771,14 @@ cd client/src
 mkdir components
 cd components
 ```
+![Installations in client](./screenshots/installationsinclient.png)  
 
 Create the three component files:
 
 ```
 touch Input.js ListTodo.js Todo.js
 ```
+
 
 Step 2: Input Component
 
@@ -815,6 +836,8 @@ cd ../..
 npm install axios
 cd src/components
 ```
+
+![Installing Axios](./screenshots/installaxios.png)  
 
 Step 4: ListTodo Component
 
@@ -1030,6 +1053,9 @@ cd ../..
 ```
 npm run dev
 ```
+
+![Successful](./screenshots/successful.png)  
+
 
 This will:
 
