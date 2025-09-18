@@ -1,51 +1,63 @@
-# MySQL Client-Server Architecture on AWS
+# Client-Server Architecture with MySQL on AWS  
 
-## 📖 Project Overview
-This project demonstrates a basic **Client-Server Architecture** using **MySQL Database Management System (DBMS)** deployed on AWS EC2 instances.
-
-- **Server A (mysql server):** Runs MySQL Server  
-- **Server B (mysql client):** Runs MySQL Client  
-- Communication established over **private IP** within the same **VPC & Subnet**  
-- Configured **remote access** to MySQL server on port `3306`  
-- Secured access by allowing inbound rules only from the client’s IP  
+Implement a basic client-server architecture using MySQL Database Management System (DBMS) with two Linux-based EC2 instances on AWS. One server hosts the MySQL database, while the other connects remotely as a client.
 
 ---
 
-## ⚙️ Steps Implemented
-1. Launched two Linux EC2 instances:  
-   - `mysql server` (MySQL Server installed)  
-   - `mysql client` (MySQL Client installed)  
+## Steps & Screenshots  
 
-2. Configured **MySQL for remote connections**:  
-   - Edited `mysqld.cnf` to set `bind-address = 0.0.0.0`  
-   - Created a remote MySQL user with proper privileges
-   
-3. ✅ Output
+### 1. Launching EC2 Instances  
+Created two Linux-based EC2 instances: one designated as **MySQL Server** and the other as **MySQL Client**. Both run in the same VPC for internal communication.  
+![Instances Launched](images/instanceslaunched.png)  
 
-Verified connection with:
+### 2. Updating & Upgrading Packages  
+Ran `sudo apt update && sudo apt upgrade -y` to ensure both instances had the latest packages and security patches.  
+![Updating and Upgrading](images/updatingandupgrading.png)  
 
-SHOW DATABASES;
+### 3. Installing MySQL Server (on Server instance)  
+Installed MySQL Server software on the **mysql server** instance to host the database engine.  
+![Installing MySQL](images/installingmysql.png)  
 
-Updated AWS **Security Group Rules**:  
-- Allowed inbound traffic on port `3306` only from the client’s private IP  
+### 4. Installing MySQL Client (on Client instance)  
+Installed MySQL Client tools on the **mysql client** instance to enable remote database connections.  
+![Installing MySQL Client](images/installmysqlonclient.png)  
 
-Connected successfully from `mysql client` to `mysql server` using:  
+### 5. Checking MySQL Version  
+Verified the installed MySQL version to confirm a successful installation.  
+![Checking MySQL Version](images/checkingmysqlversion.png)  
 
-```
-mysql -u remote_user -p -h <mysql-server-private-IP>
-```
+### 6. Starting MySQL Service  
+Started and enabled the MySQL service on the server to allow database connections.  
+![Starting MySQL](images/startingmysql.png)  
 
+### 7. Creating Remote User  
+Created a **remote MySQL user** with a secure password to allow external access from the client.  
+![Creating Remote User](images/creatingremoteuser.png)  
 
-Successfully created and queried databases remotely.
+### 8. Setting User Privileges  
+Granted the necessary privileges to the remote user, ensuring they could connect and query the database.  
+![Setting User](images/settinguser.png)  
 
-🚀 Skills Demonstrated
+### 9. Securing MySQL  
+Edited MySQL configuration to listen on all IPs (`0.0.0.0`) and tightened access control.  
+![Securing MySQL](images/securingmysql.png)  
 
-AWS EC2 (VPC, Subnet, Security Groups)
+### 10. Editing Inbound Rules (Server Security Group)  
+Configured inbound rules to allow MySQL traffic (TCP/3306) only from the client’s **private IP**, improving security.  
+![Edited Inbound](images/editedinbound.png)  
 
-MySQL Server & Client setup
+### 11. Editing Client Inbound Rule (for testing)  
+Adjusted inbound rules on the client instance when needed to support communication.  
+![Edit Client Inbound](images/editclientinbound.png)  
 
-Client-Server architecture in cloud environments
+### 12. SSH into Client Instance  
+Logged into the **mysql client** instance using SSH to begin remote connection testing.  
+![SSH into Client](images/sshintoclient.png)  
 
-Linux server administration
+### 13. Connecting to MySQL Server from Client  
+Used the `mysql -u remote_user -p -h <server-private-ip>` command to connect from the client to the server. Connection was successful, and SQL queries executed as expected.  
+![Connecting to Server](images/connectingtoserver.png)  
 
-
+### 14. Stopping the Instances Safely  
+Stopped both EC2 instances after testing to avoid incurring unnecessary AWS charges.  
+![Stopping Instances](images/stoppingtheinstances.png)  
