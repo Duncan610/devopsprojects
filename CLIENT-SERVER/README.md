@@ -20,11 +20,21 @@ This project demonstrates a basic **Client-Server Architecture** using **MySQL D
    - Edited `mysqld.cnf` to set `bind-address = 0.0.0.0`  
    - Created a remote MySQL user with proper privileges
    
-3.✅ Output
+3. ✅ Output
 
 Verified connection with:
 
 SHOW DATABASES;
+
+Updated AWS **Security Group Rules**:  
+- Allowed inbound traffic on port `3306` only from the client’s private IP  
+
+Connected successfully from `mysql client` to `mysql server` using:  
+
+```
+mysql -u remote_user -p -h <mysql-server-private-IP>
+```
+
 
 Successfully created and queried databases remotely.
 
@@ -38,9 +48,4 @@ Client-Server architecture in cloud environments
 
 Linux server administration
 
-3. Updated AWS **Security Group Rules**:  
-   - Allowed inbound traffic on port `3306` only from client’s private IP  
 
-4. Connected successfully from `mysql client` to `mysql server` using:  
-   ```bash
-   mysql -u remote_user -p -h <mysql-server-private-IP>
