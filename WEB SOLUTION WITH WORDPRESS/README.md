@@ -1,136 +1,189 @@
-# Web Solution with WordPress – Step 1 (Storage Setup)
+# Web Solution With WordPress  
 
-This project follows the **Web Solution with WordPress-102** guide.  
-So far, we have completed the **storage configuration** on an Ubuntu EC2 instance.  
+This project demonstrates how to implement a **web solution using WordPress** with a **two-server architecture** on AWS.  
+
+As a DevOps engineer, one of the most common solutions you will encounter is **PHP-based applications** such as WordPress, which is still one of the most widely used web content management systems in the world. WordPress is written in **PHP** and uses **MySQL** (or MariaDB) as its relational database management system (RDBMS).  
+
+In this project, I deployed a **three-tier architecture** that mirrors how real-world web solutions are built:  
+
+- **Presentation Layer (PL):** The client interface (browser or curl from a laptop/PC).  
+- **Business Layer (BL):** The Web Server running Apache and WordPress.  
+- **Data Layer (DAL):** The Database Server running MySQL.  
 
 ---
 
-## 📌 Steps Completed
+## 📌 Project Objectives  
 
-### 1. Launched an EC2 Instance
-- Created an Ubuntu-based EC2 instance.
-- Added **3 EBS volumes** (10 GiB each) in the same Availability Zone as the EC2.
+The project was divided into **two main parts**:  
 
-### 2. Verified Attached Volumes
-```bash
-lsblk
-df -h
-```
+1. **Storage Subsystem Configuration**  
+   - Configure and manage storage infrastructure for both the Web and Database servers using **EBS volumes** and **LVM (Logical Volume Manager)**.  
+   - Work with partitions, physical volumes, volume groups, and logical volumes.  
+   - Set up dedicated partitions for application files (`/var/www/html`) and log storage (`/var/log`).  
 
-Confirmed that the new volumes (nvme1n1, nvme2n1, nvme3n1) were available.
+2. **WordPress Deployment**  
+   - Install and configure **Apache, PHP, and WordPress** on the Web Server (Ubuntu).  
+   - Install and configure **MySQL Server** on the Database Server.  
+   - Connect WordPress (on the Web Server) to the MySQL Database (on the DB Server).  
 
-### 3. Partitioned the Volumes
+---
 
-Used gdisk to create partitions on each disk:
+## 🏗️ Technology Stack  
 
-```
-sudo gdisk /dev/nvme1n1
-sudo gdisk /dev/nvme2n1
-sudo gdisk /dev/nvme3n1
-```
+- **Cloud Provider:** AWS EC2  
+- **Operating System:** Ubuntu Linux (instead of RedHat/CentOS)  
+- **Storage Management:** EBS Volumes, gdisk, LVM  
+- **Web Tier:** Apache, PHP, WordPress  
+- **Database Tier:** MySQL Server  
+- **Security:** AWS Security Groups, Firewall (UFW), MySQL user privileges  
 
-Set partition type to Linux LVM (8E00).
 
-Verified with lsblk.
+## 📸 Step-by-Step Implementation
 
-### 4. Installed LVM2
+Below are the implementation steps with screenshots for reference.
 
-```
-sudo apt update
-sudo apt install lvm2 -y
-sudo lvmdiskscan
-```
+### 1. Attach Volumes
+Attach additional EBS volumes to the database server instance.  
+![Attach Volumes](Images/attachvolumes.png)
 
-### 5. Created Physical Volumes
+### 2. Attach DB Volume
+Attach the dedicated database storage volume.  
+![Attach DB Volume](Images/attachdbvolume.png)
 
-```
-sudo pvcreate /dev/nvme1n1p1
-sudo pvcreate /dev/nvme2n1p1
-sudo pvcreate /dev/nvme3n1p1
-sudo pvs
-```
+### 3. Inspect Block Devices
+Check the attached volumes using `lsblk`.  
+![Inspect Block Devices](Images/inspectingblockdevices.png)
 
-### 6. Created a Volume Group
+### 4. Disk Partitioning
+Partition the new volumes using `fdisk`.  
+![Disk Partitioning](Images/diskpartitioning.png)
 
-```
-sudo vgcreate webdata-vg /dev/nvme1n1p1 /dev/nvme2n1p1 /dev/nvme3n1p1
-sudo vgs
-```
+### 5. View of Partitions
+Verify partitions with `lsblk`.  
+![View Partitions](Images/viewofthepartitions.png)
 
-### 7. Created Logical Volumes
+### 6. Create Physical Volumes
+Initialize partitions as physical volumes (PVs).  
+![Create Physical Volumes](Images/createphysicalvolumes.png)
 
-```
-sudo lvcreate -n apps-lv -L 14G webdata-vg
-sudo lvcreate -n logs-lv -L 14G webdata-vg
-sudo lvs
-```
+### 7. Create Volume Groups
+Create volume groups (VGs) for better storage management.  
+![Create Volume Groups](Images/createvolumegroups.png)
 
-### 8. Formatted the Logical Volumes
+### 8. Create Logical Volumes
+Create logical volumes (LVs) from the VGs.  
+![Create Logical Volumes](Images/createlogicalvolumes.png)
 
-```
-sudo mkfs.ext4 /dev/webdata-vg/apps-lv
-sudo mkfs.ext4 /dev/webdata-vg/logs-lv
-```
+### 9. DB Create PVs
+PVs created specifically for the DB server.  
+![DB Create PVs](Images/dbcreatepvs.png)
 
-### 9. Mounted the Volumes
+### 10. DB Create VG
+Create VG for database files.  
+![DB Create VG](Images/dbcreatevg.png)
 
-Created mount points:
+### 11. Add Logical Volumes
+Create logical volumes for logs and data.  
+![Add Logical Volumes](Images/addlogicalvolumes.png)
 
-```
-sudo mkdir -p /var/www/html
-sudo mkdir -p /home/recovery/logs
-```
+### 12. DB Logical Volumes View
+Check created logical volumes.  
+![DB Logical Volumes View](Images/dblvmtoolsview.png)
 
-Mounted apps-lv to /var/www/html:
+### 13. DB LVM Tools
+Install and check LVM tools.  
+![DB LVM Tools](Images/dblvmtools.png)
 
-```
-sudo mount /dev/webdata-vg/apps-lv /var/www/html/
-```
+### 14. DB lvlogs-lv
+Dedicated LV created for DB logs.  
+![DB lvlogs-lv](Images/db-lvlogs-lv.png)
 
-Backed up existing logs:
+### 15. Create Mount Points
+Create mount points for DB and logs.  
+![Create Mount Points](Images/createmountpoints.png)
 
-```
-sudo rsync -av /var/log/ /home/recovery/logs/
-```
+### 16. Format with ext4
+Format the logical volumes with ext4.  
+![Format ext4](Images/formatwithext4.png)
 
-Mounted logs-lv to /var/log and restored logs:
+### 17. Mount Logs
+Mount the log partitions.  
+![Mount Logs](Images/mountlogs.png)
 
-```
-sudo mount /dev/webdata-vg/logs-lv /var/log
-sudo rsync -av /home/recovery/logs/ /var/log
-```
+### 18. Backup Logs
+Backup existing log files before replacement.  
+![Backup Logs](Images/backuplogs.png)
 
-### 10. Made Mounts Persistent
+### 19. Restore Logs
+Restore logs to new mounted partition.  
+![Restore Logs](Images/restorelogs.png)
 
-Retrieved UUIDs:
+### 20. UUID of Device
+Check UUID of partitions.  
+![UUID of Device](Images/uuidofdevice.png)
 
-```
-sudo blkid
-```
+### 21. UUID Configuration
+Update `/etc/fstab` with UUID for persistence.  
+![UUID Config](Images/uuid.png)
 
-Updated /etc/fstab:
+### 22. Verification of DB Logical Volume
+Verify that the DB logical volumes are mounted correctly.  
+![Verify DB LVs](Images/verificationofdblogicalvolume.png)
 
-```
-UUID=b6f441f7-aa32-43d4-8033-bbdac0ab2eef /var/www/html ext4 defaults 0 0
-UUID=813cdb07-e008-42c9-8e01-b0f2168732af /var/log      ext4 defaults 0 0
-```
+### 23. DB Recovery Files
+Check and ensure DB recovery file locations.  
+![DB Recovery Files](Images/dbrecoveryfiles.png)
 
-Applied changes:
+### 24. DB Partitions
+DB partitions successfully created.  
+![DB Partitions](Images/dbpartitions.png)
 
-```
-sudo mount -a
-sudo systemctl daemon-reload
-```
+### 25. DB Partitions View
+Double-check DB partitions.  
+![DB Partitions View](Images/dbpartitionsview.png)
 
-### 11. Verified Setup
+### 26. Install MySQL Server
+Install MySQL server on the DB instance.  
+![Install MySQL](Images/installmysqlserver.png)
 
-```
-df -h
-```
+### 27. Start and Enable MySQL
+Enable MySQL to start on boot.  
+![Start and Enable MySQL](Images/startandenablemysql.png)
 
-Output shows:
+### 28. Update DB Server Details
+Update DB server configuration files.  
+![Update DB Details](Images/updatedbserverdetails.png)
 
-```
-/dev/mapper/webdata--vg-apps--lv   14G   ...   /var/www/html
-/dev/mapper/webdata--vg-logs--lv   14G   ...   /var/log
-```
+### 29. Security Group for DB
+Configure DB security group for restricted access.  
+![DB Security Group](Images/dbsecgroup.png)
+
+### 30. Connect WordPress to DB
+Verify WordPress connects to the DB server.  
+![Connect WordPress to DB](Images/connectwordpresstodb.png)
+
+---
+
+## ✅ Final Step
+Both the Web Server and Database Server are now connected, and WordPress is running successfully.  
+![Final Step](Images/finalstep.png)
+
+---
+
+## 🔑 Key Learnings
+- How to use **AWS EC2 and EBS volumes** effectively.  
+- How to configure **LVM for scalable storage management**.  
+- How to separate **application and database tiers**.  
+- Importance of **security groups and firewall rules** for controlled access.  
+
+
+## 💡 Key Takeaways  
+
+By completing this project, I:  
+- Gained hands-on experience with **Linux storage management** (partitions, LVM, mounting, persistent volumes).  
+- Deployed a **three-tier web architecture** separating the web and database layers.  
+- Practiced configuring **AWS security groups and firewall rules** to allow controlled access between servers.  
+- Learned to **troubleshoot connections** between WordPress and a remote MySQL database.  
+
+This project builds a strong foundation for **DevOps and Cloud Engineering** skills by combining Linux administration, storage configuration, web deployment, and cloud resource management.  
+
