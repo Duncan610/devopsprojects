@@ -10,6 +10,9 @@ This project is part of a **DevOps/Cloud Engineering learning series** and focus
 
 ## 🏗️ Architecture
 
+![Load Balancer Traffic to Web Server 1](images/connectedloadbaltoweb1.png)
+![Load Balancer Traffic to Web Server 2](images/connectedloadbaltoweb2.png)
+
 **Components Used:**
 
 * **GitHub** – Source code repository
@@ -57,19 +60,16 @@ Before starting, ensure you have:
 
 ---
 
-## Architecture Overview
-
-![Load Balancer Traffic - Web Server 1](images/connectedloadbaltoweb1.png)
-![Load Balancer Traffic - Web Server 2](images/connectedloadbaltoweb2.png)
-
-The load balancer successfully distributes traffic across Web Server 1 and Web Server 2,
-confirming high availability of the tooling website.
-
----
-
 ## 🚀 Step-by-Step Implementation
 
 ### Step 1: Install and Set Up Jenkins
+
+![Install Java for Jenkins](images/installjavaforjenkins.png)
+![Installing Jenkins](images/installingjenkins.png)
+![Getting Jenkins Admin Password](images/gettingadminpassword.png)
+![Opening Port 8080 on AWS](images/openingport8080onaws.png)
+![Opened Jenkins Dashboard](images/openedjenkins.png)
+![Starting and Verifying Jenkins](images/startingandverifyingjenkins.png)
 
 1. Install Java
 2. Install Jenkins
@@ -78,18 +78,12 @@ confirming high availability of the tooling website.
 5. Unlock Jenkins using the admin password
 6. Complete initial setup
 
-## Jenkins Installation and Setup
-
-![Install Java for Jenkins](images/installjavaforjenkins.png)
-![Installing Jenkins](images/installingjenkins.png)
-![Getting Admin Password](images/gettingadminpassword.png)
-![Opening Port 8080 on AWS](images/openingport8080onaws.png)
-![Opened Jenkins Dashboard](images/openedjenkins.png)
-![Starting and Verifying Jenkins](images/startingandverifyingjenkins.png)
-
 ---
 
 ### Step 2: Create Jenkins Job
+
+![Create New Jenkins Item](images/jenkinsnewitem.png)
+![New Item on Jenkins](images/newitemonjenkins.png)
 
 1. Click **New Item**
 2. Enter project name: `tooling-github`
@@ -103,16 +97,12 @@ confirming high availability of the tooling website.
 
 ✔ Jenkins successfully clones the repository
 
-## Jenkins Job Configuration
-
-![Create New Jenkins Item](images/jenkinsnewitem.png)
-![New Item on Jenkins](images/newitemonjenkins.png)
-
-A freestyle Jenkins job was created and connected to the GitHub repository.
-
 ---
 
 ### Step 3: Configure Artifact Archiving
+
+![View of Artifacts Stored on Jenkins Server](images/viewofartifactsstoredonjenkinsserver.png)
+![List of Artifacts on Jenkins](images/listofartefactsonjenkins.png)
 
 1. Open job configuration
 2. Under **Post-build Actions**, select:
@@ -131,6 +121,8 @@ A freestyle Jenkins job was created and connected to the GitHub repository.
 
 ### Step 4: Install Publish Over SSH Plugin
 
+![Installing Publish Over SSH Plugin](images/installingpublishoversshplugins.png)
+
 1. Go to **Manage Jenkins → Manage Plugins**
 2. Search for **Publish Over SSH**
 3. Install plugin and restart Jenkins
@@ -138,6 +130,9 @@ A freestyle Jenkins job was created and connected to the GitHub repository.
 ---
 
 ### Step 5: Configure Publish Over SSH
+
+![Publish Over SSH Credentials Configuration](images/publishoversshcredentials.png)
+![Testing Configuration Showing Success](images/testingconfigurationandshowingsucess.png)
 
 1. Go to **Manage Jenkins → Configure System**
 2. Scroll to **Publish over SSH**
@@ -175,6 +170,10 @@ A freestyle Jenkins job was created and connected to the GitHub repository.
 
 ### Step 7: Trigger CI Pipeline
 
+![Jenkins Build Showing Updates from GitHub](images/seventhjenkinsbuildshowingupdatesongithub.png)
+![Successful Jenkins Build](images/successbuildonjenkins.png)
+![Build Showing Success After GitHub Change](images/buildshowingsucessafterchanginggithubrepo.png)
+
 * Make a change to `README.md` in GitHub
 * Push changes to `main` branch
 * GitHub webhook triggers Jenkins build
@@ -188,7 +187,9 @@ Finished: SUCCESS
 
 ---
 
-### Step 8: Verify on NFS Server
+### Step 8: Verify changes on NFS Server
+
+![README Changes Confirmed on NFS Server](images/readmechangesupdatesconfirmedonnfsserver.png)
 
 SSH into NFS server:
 
@@ -245,17 +246,6 @@ ToolingJenkins/
 
 ---
 
-## 👤 Author
-
-**Duncan Otieno**
-Aspiring DevOps & Cloud Engineer
-GitHub: [https://github.com/Duncan610](https://github.com/Duncan610)
-LinkedIn: [https://www.linkedin.com/in/duncan-otieno](https://www.linkedin.com/in/duncan-otieno)
-
----
-
 ## 🏁 Conclusion
 
 This project demonstrates a complete Jenkins CI workflow from source control to automated deployment. It lays a strong foundation for more advanced CI/CD pipelines involving testing, Docker, and Kubernetes in future projects.
-
-
