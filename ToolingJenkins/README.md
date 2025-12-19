@@ -57,6 +57,16 @@ Before starting, ensure you have:
 
 ---
 
+## Architecture Overview
+
+![Load Balancer Traffic - Web Server 1](images/connectedloadbaltoweb1.png)
+![Load Balancer Traffic - Web Server 2](images/connectedloadbaltoweb2.png)
+
+The load balancer successfully distributes traffic across Web Server 1 and Web Server 2,
+confirming high availability of the tooling website.
+
+---
+
 ## 🚀 Step-by-Step Implementation
 
 ### Step 1: Install and Set Up Jenkins
@@ -67,6 +77,15 @@ Before starting, ensure you have:
 4. Access Jenkins via browser on port 8080
 5. Unlock Jenkins using the admin password
 6. Complete initial setup
+
+## Jenkins Installation and Setup
+
+![Install Java for Jenkins](images/installjavaforjenkins.png)
+![Installing Jenkins](images/installingjenkins.png)
+![Getting Admin Password](images/gettingadminpassword.png)
+![Opening Port 8080 on AWS](images/openingport8080onaws.png)
+![Opened Jenkins Dashboard](images/openedjenkins.png)
+![Starting and Verifying Jenkins](images/startingandverifyingjenkins.png)
 
 ---
 
@@ -83,6 +102,13 @@ Before starting, ensure you have:
 5. Save and build the job
 
 ✔ Jenkins successfully clones the repository
+
+## Jenkins Job Configuration
+
+![Create New Jenkins Item](images/jenkinsnewitem.png)
+![New Item on Jenkins](images/newitemonjenkins.png)
+
+A freestyle Jenkins job was created and connected to the GitHub repository.
 
 ---
 
