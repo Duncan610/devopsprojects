@@ -1,1 +1,12 @@
+[webservers]
+10.0.2.18 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/conf.pem
+10.0.2.30 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/conf.pem
 
+[db]
+10.0.2.105 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/conf.pem
+
+[nfs]
+10.0.2.91 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/conf.pem
+
+[lb]
+10.0.1.73 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/conf.pem

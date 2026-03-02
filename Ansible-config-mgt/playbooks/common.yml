@@ -1,1 +1,24 @@
+---
+- name: Configure all servers
+  hosts: all
+  become: yes
 
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install wireshark
+      apt:
+        name: wireshark
+        state: latest
+
+    - name: Create directory
+      file:
+        path: /opt/ansible-test
+        state: directory
+
+    - name: Create file
+      copy:
+        content: "Ansible is working!"
+        dest: /opt/ansible-test/test.txt
