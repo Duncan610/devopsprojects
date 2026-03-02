@@ -4,21 +4,23 @@
   become: yes
 
   tasks:
- #   - name: Update apt cache
-  #    apt:
-   #     update_cache: yes
+    - name: Update apt cache (safe for all servers)
+      apt:
+        update_cache: yes
+      ignore_errors: yes  # continue even if this fails
 
-    - name: Install wireshark
+    - name: Install wireshark if available
       apt:
         name: wireshark
         state: latest
+      ignore_errors: yes  # skip if package not found
 
-    - name: Create directory
+    - name: Create directory for testing
       file:
         path: /opt/ansible-test
         state: directory
 
-    - name: Create file
+    - name: Create test file
       copy:
         content: "Ansible is working!"
         dest: /opt/ansible-test/test.txt
